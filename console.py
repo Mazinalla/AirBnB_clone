@@ -1,11 +1,13 @@
 import cmd
+import sys
 import json
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
 from models import storage
 
-class HBNBCommand(cmd.Cmd):
+class HBNBCommand( cmd.Cmd ):
+
     prompt = "(hbnb) "
 
     def do_quit(self, arg):
@@ -122,6 +124,12 @@ class HBNBCommand(cmd.Cmd):
         obj.save()
 
 if __name__ == "__main__":
-    # Creating a unique FileStorage instance for the application
+    if len(sys.argv) > 1:
+        # Non-interactive mode, read commands from a file or pipe
+        with open(sys.argv[1], 'r') as script_file:
+            commands = script_file.readlines()
+            HBNBCommand().onecmd("\n".join(commands))
+    else:
+        # Interactive mode
+        HBNBCommand().cmdloop()
     storage.reload()
-    HBNBCommand().cmdloop()
