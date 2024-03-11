@@ -1,31 +1,31 @@
 import json
-import os
 
 class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
-        return self.__objects
+        return FileStorage.__objects
 
     def new(self, obj):
-        key = f"{obj.__class__.__name__}.{obj.id}"
-        self.__objects[key] = obj
+        key = "{}.{}".format(type(obj).__name__, obj.id)
+        FileStorage.__objects[key] = obj
 
     def save(self):
         serialized_objects = {}
-        for key, obj in self.__objects.items():
+        for key, obj in FileStorage.__objects.items():
             serialized_objects[key] = obj.to_dict()
-
-        with open(self.__file_path, 'w') as file:
+        with open(FileStorage.__file_path, 'w', encoding='utf-8') as file:
             json.dump(serialized_objects, file)
 
     def reload(self):
-        if os.path.exists(self.__file_path):
-            with open(self.__file_path, 'r') as file:
+        try:
+            with open(FileStorage.__file_path, 'r', encoding='utf-8') as file:
                 data = json.load(file)
-                for key, obj_data in data.items():
+                for key, value in data.items():
                     class_name, obj_id = key.split('.')
                     cls = globals()[class_name]
-                    obj = cls(**obj_data)
-                    self.new(obj)
+                    obj = cls(**value)
+                    FileStorage.__objects[key] = obj
+        except FileNotFoundError:
+            pass
