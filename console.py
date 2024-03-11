@@ -124,7 +124,8 @@ class HBNBCommand(cmd.Cmd):
         setattr(obj, attribute_name, eval(value))
         obj.save()
 
-if  __name__ == "__main__":
+if __name__ == "__main__":
+
     if len(sys.argv) > 1:
         # Non-interactive mode, read commands from a file or pipe
         with open(sys.argv[1], 'r') as script_file:
