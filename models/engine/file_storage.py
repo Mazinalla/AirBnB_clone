@@ -24,7 +24,8 @@ class FileStorage:
                 data = json.load(file)
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
-                    cls = globals()[class_name]
+                    module = __import__('models.' + class_name, fromlist=[class_name])
+                    cls = getattr(module, class_name)
                     obj = cls(**value)
                     FileStorage.__objects[key] = obj
         except FileNotFoundError:
