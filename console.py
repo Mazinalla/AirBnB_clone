@@ -1,8 +1,11 @@
-import cmd
+
 
 '''
 cmd is a module that help you built your own shell
 '''
+
+import cmd
+
 
 class HBNBCommand(cmd.Cmd):
     """
