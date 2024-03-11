@@ -1,4 +1,9 @@
 import cmd
+
+'''
+cmd is a module that help you built your own shell
+'''
+
 class HBNBCommand(cmd.Cmd):
     """
     HBNBCommand Module
