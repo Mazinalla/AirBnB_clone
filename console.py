@@ -1,9 +1,4 @@
-
-
-'''
-cmd is a module that help you built your own shell
-'''
-
+'''cmd is a module that help you built your own shell'''
 import cmd
 
 
