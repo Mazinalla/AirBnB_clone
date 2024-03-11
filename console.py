@@ -30,18 +30,33 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
-    def do_quit(self, arg):
-        """Exit from the console"""
+    def handle_empty_line(self, line):
+        """
+        Eliminates empty lines
+        """
+        return False
+
+    def do_quit(self, line):
+        """Handles the 'quit' command
+
+        Args:
+            line(args): input argument for quiting
+            the terminal
+
+        """
         return True
 
-    def do_EOF(self, arg):
-        """Exit on system end of file"""
-        print()
-        return True
+    def do_EOF(self, line):
+        """Quits command interpreter with ctrl+d
 
-    def emptyline(self):
-        """Do nothing on an empty input line"""
-        pass
+         Args:
+            line(args): input argument for quiting
+            the terminal
+
+        """
+        return True
+    
+    
 
 
 if __name__ == '__main__':
