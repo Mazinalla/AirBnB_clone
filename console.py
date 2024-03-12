@@ -55,14 +55,8 @@ class HBNBCommand(cmd.Cmd):
 
         """
         return True
-    
-    def precmd(self, line):
-        """Called before a command is executed"""
-        if line.isspace():
-            return ""
-        return line
 
-
+   
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
 
