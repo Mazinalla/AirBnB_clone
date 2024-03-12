@@ -1,35 +1,34 @@
 import json
+import os
 
 class FileStorage:
     __file_path = "file.json"
-    __objects = {}
+    __object = {}
 
     def all(self):
-        return FileStorage.__objects
-
+        return self.__object
+    
     def new(self, obj):
-        key = "{}.{}".format(type(obj).__name__, obj.id)
-        FileStorage.__objects[key] = obj
+        key = f"{obj.__class__.__name__}.{obj.id}"
+        self.__object[key] = obj
 
-    def save(self):
+    def save(self, __object, file_path):
+        __file_path = "objects.json"
         serialized_objects = {}
-        for key, obj in FileStorage.__objects.items():
-            serialized_objects[key] = obj.to_dict()
-        with open(FileStorage.__file_path, 'w', encoding='utf-8') as file:
-            json.dump(serialized_objects, file)
+        for key, obj in __object.items():
+            serialized_objects[key] = obj.__dict__
+        
+        with open(file_path, 'w') as json_file:
+            json.dump(serialized_objects, json_file, indent=4)
 
     def reload(self):
-        
-        try:
-            with open(FileStorage.__file_path, 'r', encoding='utf-8') as file:
-                data = json.load(file)
+        if os.path.exists(self.__file_path):
+            with open(self.__file_path, 'r') as json_file:
+                data = json.load(json_file)
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
-                    module = __import__('models.' + class_name, fromlist=[class_name])
-                    cls = getattr(module, class_name)
-                    obj = cls(**value)
-                    FileStorage.__objects[key] = obj
-        except FileNotFoundError:
-            
-            
-            pass
+                    class_obj = globals()[class_name]
+                    if key not in self.__objects:  # Check if it's a new instance
+                        obj = class_obj(**value)
+                        obj.new()  # Call new method on storage
+                        self.__objects[key] = obj
