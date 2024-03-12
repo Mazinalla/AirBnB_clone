@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 
 from models.__init__ import storage
 import uuid
