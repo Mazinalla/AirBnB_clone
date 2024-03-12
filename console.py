@@ -30,10 +30,8 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
-    def empty_line(self, line):
-        """
-        Eliminates empty lines
-        """
+    def emptyline(self):
+        """Do nothing on an empty input line"""
         return False
 
     def do_quit(self, line):
@@ -55,8 +53,14 @@ class HBNBCommand(cmd.Cmd):
 
         """
         return True
+    
+    def precmd(self, line):
+        """Called before a command is executed"""
+        if line.isspace():
+            return ""
+        return line
 
-   
+
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
 
