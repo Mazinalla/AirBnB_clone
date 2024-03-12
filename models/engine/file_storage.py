@@ -1,41 +1,34 @@
 #!/usr/bin/python3
 
 import json
-import os
+
 
 class FileStorage:
     __file_path = "file.json"
-    __object = {}
+    __objects = {}
 
     def all(self):
-        return self.__object
-    
-    def new(self, obj):
-        key = f"{obj.__class__.__name__}.{obj.id}"
-        self.__object[key] = obj
+        return self.__objects
 
-    def save(self, __object, file_path):
-        __file_path = "objects.json"
+    def new(self, obj):
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
+        self.__objects[key] = obj
+
+    def save(self):
         serialized_objects = {}
-        for key, obj in __object.items():
-            serialized_objects[key] = obj.__dict__
-        
-        with open(file_path, 'w') as json_file:
-            json.dump(serialized_objects, json_file, indent=4)
+        for key, obj in self.__objects.items():
+            serialized_objects[key] = obj.to_dict()
+        with open(self.__file_path, 'w') as file:
+            json.dump(serialized_objects, file)
 
     def reload(self):
-        if os.path.exists(self.__file_path):
-            with open(self.__file_path, 'r') as json_file:
-                data = json.load(json_file)
-                for key, value in data.items():
+        try:
+            with open(self.__file_path, 'r') as file:
+                serialized_objects = json.load(file)
+                for key, value in serialized_objects.items():
                     class_name, obj_id = key.split('.')
-                    if class_name == 'Example':
-                        cls = Example
-                    elif class_name == 'BaseModel':
-                        cls = BaseModel  # Assuming BaseModel is defined in this module
-                    else:
-                        continue
-                    if key not in self.__objects:  # Check if it's a new instance
-                        obj = cls(**value)
-                        obj.new()  # Call new method on storage
-                        self.__objects[key] = obj
+                    cls = eval(class_name)
+                    obj = cls(**value)
+                    self.__objects[key] = obj
+        except FileNotFoundError:
+            pass

@@ -17,6 +17,7 @@ class BaseModel:
                 # ignore key __class__ from kwargs
                 if key != '__class__':
                     setattr(self, key, value)
+                    storage.new(self)
         else:
             self.id = str(uuid.uuid4().hex)
             self.created_at = datetime.now()
