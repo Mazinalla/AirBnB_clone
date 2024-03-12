@@ -2,64 +2,132 @@
 """Console module for HBNB project"""
 
 import cmd
-
+import shlex
+from models import storage
+from models.base_model import BaseModel
 
 class HBNBCommand(cmd.Cmd):
-    """
-    HBNBCommand Module
-
-    This module defines a simple command-line interpreter using the cmd module.
-    It provides a prompt with "(hbnb) " and allows the user to enter commands.
-
-    Commands:
-    - quit: Exit from the console.
-    - EOF: Exit on system end of file.
-    - help: Get help on commands.
-
-    Usage:
-    1. Run the script to start the console.
-    2. Enter commands at the prompt.
-
-    Example:
-    ```
-    (hbnb) help
-    (hbnb) quit
-    ```
-        
-                """
-
     prompt = "(hbnb) "
 
-    def emptyline(self):
-        """Do nothing on an empty input line"""
-        return False
+    def do_create(self, line):
+        if not line:
+            print("** class name missing **")
+            return
+
+        args = shlex.split(line)
+        class_name = args[0]
+        if class_name not in storage.classes():
+            print("** class doesn't exist **")
+            return
+
+        new_instance = storage.create(class_name)
+        storage.save()
+        print(new_instance.id)
+
+    def do_show(self, line):
+        args = shlex.split(line)
+        if len(args) == 0:
+            print("** class name missing **")
+            return
+        class_name = args[0]
+        if class_name not in storage.classes():
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        instance_id = args[1]
+        key = class_name + "." + instance_id
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+
+        print(storage.all()[key])
+
+    def do_destroy(self, line):
+        args = shlex.split(line)
+        if len(args) == 0:
+            print("** class name missing **")
+            return
+        class_name = args[0]
+        if class_name not in storage.classes():
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        instance_id = args[1]
+        key = class_name + "." + instance_id
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+
+        del storage.all()[key]
+        storage.save()
+
+    def do_all(self, line):
+        args = shlex.split(line)
+        if len(args) == 0:
+            print([str(obj) for obj in storage.all().values()])
+        else:
+            class_name = args[0]
+            if class_name not in storage.classes():
+                print("** class doesn't exist **")
+                return
+            print([str(obj) for key, obj in storage.all().items() if key.startswith(class_name)])
+
+    def do_update(self, line):
+        args = shlex.split(line)
+        if len(args) == 0:
+            print("** class name missing **")
+            return
+        class_name = args[0]
+        if class_name not in storage.classes():
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        instance_id = args[1]
+        key = class_name + "." + instance_id
+        if key not in storage.all():
+            print("** no instance found **")
+            return
+
+        if len(args) < 3:
+            print("** attribute name missing **")
+            return
+
+        if len(args) < 4:
+            print("** value missing **")
+            return
+
+        attr_name = args[2]
+        attr_value = args[3]
+
+        obj = storage.all()[key]
+        try:
+            attr_value = eval(attr_value)
+        except:
+            pass
+
+        setattr(obj, attr_name, attr_value)
+        storage.save()
 
     def do_quit(self, line):
-        """Handles the 'quit' command
-
-        Args:
-            line(args): input argument for quiting
-            the terminal
-
-        """
         return True
 
     def do_EOF(self, line):
-        """Quits command interpreter with ctrl+d
-
-         Args:
-            line(args): input argument for quiting
-            the terminal
-
-        """
         return True
-    
-    def precmd(self, line):
-        """Called before a command is executed"""
-        if line.isspace():
-            return ""
-        return line
 
+    def emptyline(self):
+        pass
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
