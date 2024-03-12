@@ -29,8 +29,13 @@ class FileStorage:
                 data = json.load(json_file)
                 for key, value in data.items():
                     class_name, obj_id = key.split('.')
-                    class_obj = globals()[class_name]
+                    if class_name == 'Example':
+                        cls = Example
+                    elif class_name == 'BaseModel':
+                        cls = BaseModel  # Assuming BaseModel is defined in this module
+                    else:
+                        continue
                     if key not in self.__objects:  # Check if it's a new instance
-                        obj = class_obj(**value)
+                        obj = cls(**value)
                         obj.new()  # Call new method on storage
                         self.__objects[key] = obj
