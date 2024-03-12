@@ -30,7 +30,7 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = "(hbnb) "
 
-    def handle_empty_line(self, line):
+    def empty_line(self, line):
         """
         Eliminates empty lines
         """
