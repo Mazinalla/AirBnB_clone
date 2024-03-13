@@ -11,6 +11,7 @@ import unittest
 from datetime import datetime
 from time import sleep
 from models.user import User
+import shlex
 
 
 class TestUser_instantiation(unittest.TestCase):
@@ -189,6 +190,21 @@ class TestUser_to_dict(unittest.TestCase):
         with self.assertRaises(TypeError):
             us.to_dict(None)
 
+    def do_all(self, arg):
+        args = shlex.split(arg)
+        if not args:
+            print("** class name missing **")
+            return
+
+        class_name = args[0]
+        if class_name not in self.storage.classes():
+            print("** class doesn't exist **")
+            return
+
+        # Retrieve all instances of the specified class
+        all_instances = self.storage.all()[class_name].values()
+
+        print([str(instance) for instance in all_instances])
 
 if __name__ == "__main__":
     unittest.main()
