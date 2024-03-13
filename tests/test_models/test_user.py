@@ -197,14 +197,21 @@ class TestUser_to_dict(unittest.TestCase):
             return
 
         class_name = args[0]
-        if class_name not in self.storage.classes():
+        if class_name not in storage.classes():
             print("** class doesn't exist **")
             return
 
-        # Retrieve all instances of the specified class
-        all_instances = self.storage.all()[class_name].values()
+        # If there are more arguments, check if it's a call to <class name>.all()
+        if len(args) > 1:
+            method_name = args[1]
+            if method_name == "all":
+                # Retrieve all instances of the specified class
+                all_instances = storage.all()[class_name].values()
+                print([str(instance) for instance in all_instances])
+                return
 
-        print([str(instance) for instance in all_instances])
+        # If it's not <class name>.all(), retrieve all instances of the specified class
+        print([str(instance) for instance in storage.all()[class_name].values()])
 
 if __name__ == "__main__":
     unittest.main()
