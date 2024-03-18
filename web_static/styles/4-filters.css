@@ -6,7 +6,15 @@
     border-radius: 4px;
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: space-between;
+}
+
+.filters .amenities {
+    margin-right: 150px;
+}
+
+.filters .locations {
+    margin-left: 40px;
 }
 
 .filters button {
@@ -24,13 +32,3 @@
     opacity: 90%;
 }
 
-/* font size: 18px
-inside the section filters
-background color #FF5A5F
-text color #FFFFFF
-height: 48px
-width: 20% of the section filters
-no borders
-border radius: 4px
-center vertically and at 30px of the right border
-change opacity to 90% when the mouse is on the button */
