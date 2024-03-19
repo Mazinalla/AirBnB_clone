@@ -14,7 +14,7 @@
 }
 
 .filters .locations {
-    margin-left: 40px;
+    margin-left: 35px;
 }
 
 .filters button {
@@ -31,4 +31,3 @@
 .filters button:hover {
     opacity: 90%;
 }
-
