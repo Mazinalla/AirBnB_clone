@@ -14,13 +14,13 @@ article {
     border: 1px solid #FF5A5F;
     border-radius: 4px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
 }
 
 article h2 {
     font-size: 30px;
     position: relative;
-    left: 0;
+    left: 5px;
     bottom: 15px;
 }
 
